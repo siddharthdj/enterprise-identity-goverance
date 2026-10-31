@@ -1,0 +1,23 @@
+
+{
+  "Finance Analyst": [
+    {"application": "ERP", "resource": "Financial Records", "action": "read"},
+    {"application": "ERP", "resource": "Financial Records", "action": "write"}
+  ],
+  "HR Analyst": [
+    {"application": "HRMS", "resource": "Employee Records", "action": "read"},
+    {"application": "HRMS", "resource": "Employee Records", "action": "write"}
+  ],
+  "Developer": [
+    {"application": "GitHub", "resource": "Repositories", "action": "read"},
+    {"application": "GitHub", "resource": "Repositories", "action": "write"}
+  ],
+  "IT Administrator": [
+    {"application": "Infrastructure", "resource": "Servers", "action": "read"},
+    {"application": "Infrastructure", "resource": "Servers", "action": "admin"}
+  ],
+  "Security Analyst": [
+    {"application": "SIEM", "resource": "Security Logs", "action": "read"},
+    {"application": "SIEM", "resource": "Security Logs", "action": "investigate"}
+  ]
+}

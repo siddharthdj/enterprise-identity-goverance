@@ -1,0 +1,23 @@
+
+{
+  "Finance Analyst": {
+    "description": "Finance department employee",
+    "department": "Finance"
+  },
+  "HR Analyst": {
+    "description": "Human Resources employee",
+    "department": "HR"
+  },
+  "Developer": {
+    "description": "Software engineering employee",
+    "department": "Engineering"
+  },
+  "IT Administrator": {
+    "description": "IT infrastructure administrator",
+    "department": "IT"
+  },
+  "Security Analyst": {
+    "description": "Security operations employee",
+    "department": "Security"
+  }
+}

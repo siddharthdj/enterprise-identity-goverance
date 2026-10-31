@@ -1,0 +1,11 @@
+employee_id,full_name,department,job_title,employment_status
+EMP001,John Smith,Finance,Finance Analyst,active
+EMP002,Sarah Johnson,HR,HR Specialist,active
+EMP003,David Wilson,Engineering,Software Developer,active
+EMP004,Michael Brown,IT,IT Administrator,active
+EMP005,Emily Davis,Security,Security Analyst,active
+EMP006,Robert Taylor,Finance,Finance Analyst,active
+EMP007,Lisa Anderson,Engineering,Software Developer,active
+EMP008,James Thomas,HR,HR Specialist,active
+EMP009,Daniel Martin,IT,IT Administrator,active
+EMP010,Anna White,Security,Security Analyst,active
