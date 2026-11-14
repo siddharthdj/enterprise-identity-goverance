@@ -18,63 +18,35 @@ The system uses a modular architecture to separate identity lifecycle operations
 
 
 
-```text
 
-&#x20;               HR Employee Data
+```mermaid
+flowchart TD
+    A["HR Employee Data<br/>employees.csv"]
+    B["IAM Configuration<br/>roles.json<br/>permissions.json<br/>job_role_mapping.json"]
 
-&#x20;                (employees.csv)
+    C["CLI Interface"]
 
-&#x20;                      |
+    D["Identity Lifecycle Management<br/>Provision | Move | Deprovision"]
+    E["RBAC Configuration<br/>Job Role to IAM Role"]
+    F["Access Certification<br/>Generate | Approve | Revoke"]
+    G["Audit Reporting"]
 
-&#x20;                      v
+    H[("SQLite Database")]
 
-&#x20;             Identity Lifecycle
+    A --> D
+    B --> E
 
-&#x20;             Provision / Move /
+    C --> D
+    C --> E
+    C --> F
+    C --> G
 
-&#x20;                Deprovision
-
-&#x20;                      |
-
-&#x20;                      v
-
-&#x20;               RBAC Engine
-
-&#x20;            Job Role -> IAM Role
-
-&#x20;                      |
-
-&#x20;                      v
-
-&#x20;               SQLite Database
-
-&#x20;                      |
-
-&#x20;         +------------+------------+
-
-&#x20;         |            |            |
-
-&#x20;         v            v            v
-
-&#x20;    Access         Audit       Identity
-
-&#x20; Certification   Reporting    Records
-
-&#x20;         |            |
-
-&#x20;         v            v
-
-&#x20;    Approve /      Audit Logs
-
-&#x20;     Revoke
-
-&#x20;         |
-
-&#x20;         v
-
-&#x20;      CLI Interface
-
+    D --> H
+    E --> H
+    F --> H
+    H --> G
 ```
+
 
 
 
