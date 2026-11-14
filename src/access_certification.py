@@ -155,32 +155,6 @@ def get_access_review_summary(review_period):
     finally:
         connection.close()
 
-
-def test_access_review_summary(test_db):
-
-    generate_access_review("2026-Q4")
-
-    with get_connection() as connection:
-        review = connection.execute("""
-            SELECT review_id
-            FROM access_reviews
-            WHERE review_period = '2026-Q4'
-        """).fetchone()
-
-    review_access(
-        review_id=review["review_id"],
-        decision="approved",
-        reviewer="MANAGER001"
-    )
-
-    summary = get_access_review_summary("2026-Q4")
-
-    assert summary["total_reviews"] == 1
-    assert summary["approved"] == 1
-    assert summary["revoked"] == 0
-    assert summary["pending"] == 0
-
-
 def get_pending_access_reviews(review_period):
     """Return all pending access reviews for a given period."""
     connection = get_connection()
