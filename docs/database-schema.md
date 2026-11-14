@@ -1,8 +1,8 @@
-\# Database Schema
+# Database Schema
 
 
 
-\## 1. Overview
+## 1. Overview
 
 
 
@@ -10,11 +10,11 @@ The application uses SQLite as its relational database. The schema supports empl
 
 
 
-\## 2. Database Tables
+## 2. Database Tables
 
 
 
-\### employees
+### employees
 
 
 
@@ -24,16 +24,16 @@ Stores employee and organizational information.
 
 | Column | Type | Description |
 |---|---|---|
-| employee\_id | TEXT | Unique employee identifier |
-| full\_name | TEXT | Employee name |
+| employee_id | TEXT | Unique employee identifier |
+| full_name | TEXT | Employee name |
 | department | TEXT | Organizational department |
-| job\_title | TEXT | Employee's job title |
-| employment\_status | TEXT | Employment status |
-| created\_at | TEXT | Record creation timestamp |
+| job_title | TEXT | Employee's job title |
+| employment_status | TEXT | Employment status |
+| created_at | TEXT | Record creation timestamp |
 
 
 
-\### identities
+### identities
 
 
 
@@ -43,15 +43,15 @@ Stores digital identities associated with employees.
 
 | Column | Type | Description |
 |---|---|---|
-| identity\_id | INTEGER | Identity identifier |
-| employee\_id | TEXT | Associated employee |
+| identity_id | INTEGER | Identity identifier |
+| employee_id | TEXT | Associated employee |
 | username | TEXT | Generated username |
-| account\_status | TEXT | Account status |
-| created\_at | TEXT | Record creation timestamp |
+| account_status | TEXT | Account status |
+| created_at | TEXT | Record creation timestamp |
 
 
 
-\### roles
+### roles
 
 
 
@@ -61,13 +61,13 @@ Defines organizational access roles.
 
 | Column | Type | Description |
 |---|---|---|
-| role\_id | INTEGER | Role identifier |
-| role\_name | TEXT | Role name |
+| role_id | INTEGER | Role identifier |
+| role_name | TEXT | Role name |
 | description | TEXT | Role description |
 
 
 
-\### permissions
+### permissions
 
 
 
@@ -77,14 +77,14 @@ Defines application-level permissions.
 
 | Column | Type | Description |
 |---|---|---|
-| permission\_id | INTEGER | Permission identifier |
+| permission_id | INTEGER | Permission identifier |
 | application | TEXT | Target application |
 | resource | TEXT | Resource being accessed |
 | action | TEXT | Permitted action |
 
 
 
-\### role\_permissions
+### role_permissions
 
 
 
@@ -94,12 +94,12 @@ Implements the many-to-many relationship between roles and permissions.
 
 | Column | Type | Description |
 |---|---|---|
-| role\_id | INTEGER | Associated role |
-| permission\_id | INTEGER | Associated permission |
+| role_id | INTEGER | Associated role |
+| permission_id | INTEGER | Associated permission |
 
 
 
-\### user\_roles
+### user_roles
 
 
 
@@ -109,16 +109,16 @@ Tracks role assignments to digital identities.
 
 | Column | Type | Description |
 |---|---|---|
-| assignment\_id | INTEGER | Assignment identifier |
-| identity\_id | INTEGER | Associated identity |
-| role\_id | INTEGER | Assigned role |
-| assignment\_status | TEXT | Assignment status |
-| assigned\_by | TEXT | Assignment actor |
-| assigned\_at | TEXT | Assignment timestamp |
+| assignment_id | INTEGER | Assignment identifier |
+| identity_id | INTEGER | Associated identity |
+| role_id | INTEGER | Assigned role |
+| assignment_status | TEXT | Assignment status |
+| assigned_by | TEXT | Assignment actor |
+| assigned_at | TEXT | Assignment timestamp |
 
 
 
-\### access\_reviews
+### access_reviews
 
 
 
@@ -128,17 +128,17 @@ Stores periodic access certification records.
 
 | Column | Type | Description |
 |---|---|---|
-| review\_id | INTEGER | Review identifier |
-| identity\_id | INTEGER | Identity under review |
-| role\_id | INTEGER | Role under review |
-| review\_period | TEXT | Certification period |
+| review_id | INTEGER | Review identifier |
+| identity_id | INTEGER | Identity under review |
+| role_id | INTEGER | Role under review |
+| review_period | TEXT | Certification period |
 | reviewer | TEXT | Reviewer identifier |
 | decision | TEXT | Pending, approved, or revoked |
-| review\_timestamp | DATETIME | Decision timestamp |
+| review_timestamp | DATETIME | Decision timestamp |
 
 
 
-\### audit\_logs
+### audit_logs
 
 
 
@@ -148,67 +148,67 @@ Maintains a record of IAM governance events.
 
 | Column | Type | Description |
 |---|---|---|
-| audit\_id | INTEGER | Audit event identifier |
+| audit_id | INTEGER | Audit event identifier |
 | actor | TEXT | Actor responsible for the event |
-| target\_identity\_id | INTEGER | Affected identity |
-| event\_type | TEXT | Type of IAM event |
-| event\_details | TEXT | Event description |
+| target_identity_id | INTEGER | Affected identity |
+| event_type | TEXT | Type of IAM event |
+| event_details | TEXT | Event description |
 | outcome | TEXT | Event outcome |
-| event\_timestamp | TEXT | Event timestamp |
+| event_timestamp | TEXT | Event timestamp |
 
 
 
-\## 3. Entity Relationships
+## 3. Entity Relationships
 
 
 
-\- One employee can be associated with a digital identity.
+- One employee can be associated with a digital identity.
 
-\- One identity can have multiple role assignments.
+- One identity can have multiple role assignments.
 
-\- One role can be assigned to multiple identities.
+- One role can be assigned to multiple identities.
 
-\- Roles can contain multiple permissions.
+- Roles can contain multiple permissions.
 
-\- Permissions can belong to multiple roles.
+- Permissions can belong to multiple roles.
 
-\- Access reviews reference an identity and the role being reviewed.
+- Access reviews reference an identity and the role being reviewed.
 
-\- Audit events can reference the identity affected by an operation.
-
-
-
-\## 4. Access Governance Data Flow
+- Audit events can reference the identity affected by an operation.
 
 
 
-1\. Employee records are used to provision identities.
-
-2\. Job-role mappings determine the appropriate IAM role.
-
-3\. Role-permission mappings define the permissions associated with each role.
-
-4\. User-role assignments track access granted to identities.
-
-5\. Access reviews evaluate existing assignments.
-
-6\. Approval and revocation decisions update governance records.
-
-7\. Audit logs retain a history of relevant operations.
+## 4. Access Governance Data Flow
 
 
 
-\## 5. Design Considerations
+1. Employee records are used to provision identities.
+
+2. Job-role mappings determine the appropriate IAM role.
+
+3. Role-permission mappings define the permissions associated with each role.
+
+4. User-role assignments track access granted to identities.
+
+5. Access reviews evaluate existing assignments.
+
+6. Approval and revocation decisions update governance records.
+
+7. Audit logs retain a history of relevant operations.
 
 
 
-\- Relational tables separate employee, identity, role, and permission data.
+## 5. Design Considerations
 
-\- Foreign keys maintain referential integrity.
 
-\- Access-review records prevent duplicate reviews for the same identity, role, and review period.
 
-\- Audit records provide traceability for governance activities.
+- Relational tables separate employee, identity, role, and permission data.
+
+- Foreign keys maintain referential integrity.
+
+- Access-review records prevent duplicate reviews for the same identity, role, and review period.
+
+- Audit records provide traceability for governance activities.
 
 
 

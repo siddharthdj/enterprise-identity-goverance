@@ -1,8 +1,8 @@
-\# System Architecture
+# System Architecture
 
 
 
-\## 1. Overview
+## 1. Overview
 
 
 
@@ -14,7 +14,7 @@ The system uses a modular architecture to separate identity lifecycle operations
 
 
 
-\## 2. Architecture
+## 2. Architecture
 
 
 
@@ -78,22 +78,22 @@ The system uses a modular architecture to separate identity lifecycle operations
 
 
 
-\## 3. Application Components
+## 3. Application Components
 
 
 
 | Component | Responsibility |
 |---|---|
 | `database.py` | Database connection and schema initialization |
-| `seed\_data.py` | Loads roles, permissions, and role-permission mappings |
-| `identity\_lifecycle.py` | Employee provisioning, transfers, and deprovisioning |
-| `access\_certification.py` | Periodic access reviews and approval/revocation workflows |
-| `audit\_reporting.py` | Retrieves and reports IAM audit events |
+| `seed_data.py` | Loads roles, permissions, and role-permission mappings |
+| `identity_lifecycle.py` | Employee provisioning, transfers, and deprovisioning |
+| `access_certification.py` | Periodic access reviews and approval/revocation workflows |
+| `audit_reporting.py` | Retrieves and reports IAM audit events |
 | `cli.py` | Interactive interface for IAM operations |
 
 
 
-\## 4. Data Architecture
+## 4. Data Architecture
 
 
 
@@ -105,107 +105,107 @@ Core database entities:
 
 
 
-\- \*\*employees:\*\* Employee information and employment status.
+- **employees:** Employee information and employment status.
 
-\- \*\*identities:\*\* Digital identity records associated with employees.
+- **identities:** Digital identity records associated with employees.
 
-\- \*\*roles:\*\* Business and technical access roles.
+- **roles:** Business and technical access roles.
 
-\- \*\*permissions:\*\* Individual access permissions.
+- **permissions:** Individual access permissions.
 
-\- \*\*role\_permissions:\*\* Maps permissions to roles.
+- **role_permissions:** Maps permissions to roles.
 
-\- \*\*user\_roles:\*\* Tracks role assignments and their status.
+- **user_roles:** Tracks role assignments and their status.
 
-\- \*\*access\_reviews:\*\* Stores periodic access certification decisions.
+- **access_reviews:** Stores periodic access certification decisions.
 
-\- \*\*audit\_logs:\*\* Records governance activities and outcomes.
-
-
-
-\## 5. Identity Lifecycle Workflow
+- **audit_logs:** Records governance activities and outcomes.
 
 
 
-\### Joiner
-
-1\. Employee data is received.
-
-2\. Employment status and required attributes are validated.
-
-3\. A digital identity is created.
-
-4\. The employee's job title is mapped to an IAM role.
-
-5\. Role assignments are recorded.
-
-6\. The provisioning activity is logged.
+## 5. Identity Lifecycle Workflow
 
 
 
-\### Mover
+### Joiner
 
-1\. Employee department and job title are updated.
+1. Employee data is received.
 
-2\. Existing role assignments are revoked.
+2. Employment status and required attributes are validated.
 
-3\. The new job title is mapped to the appropriate IAM role.
+3. A digital identity is created.
 
-4\. The new role is assigned.
+4. The employee's job title is mapped to an IAM role.
 
-5\. The transfer is recorded in the audit log.
+5. Role assignments are recorded.
 
-
-
-\### Leaver
-
-1\. The employee is identified for termination.
-
-2\. The digital identity is disabled.
-
-3\. Active role assignments are revoked.
-
-4\. Employment status is updated.
-
-5\. The deprovisioning activity is logged.
+6. The provisioning activity is logged.
 
 
 
-\## 6. Access Certification Workflow
+### Mover
+
+1. Employee department and job title are updated.
+
+2. Existing role assignments are revoked.
+
+3. The new job title is mapped to the appropriate IAM role.
+
+4. The new role is assigned.
+
+5. The transfer is recorded in the audit log.
 
 
 
-1\. An access review is generated for a defined review period.
+### Leaver
 
-2\. Active employee-role assignments are included.
+1. The employee is identified for termination.
 
-3\. Reviews remain pending until a decision is recorded.
+2. The digital identity is disabled.
 
-4\. An authorized workflow operator approves or revokes access.
+3. Active role assignments are revoked.
 
-5\. Revoked assignments are marked accordingly.
+4. Employment status is updated.
 
-6\. Decisions are recorded in the audit log.
-
-
-
-\## 7. Technology Choices
+5. The deprovisioning activity is logged.
 
 
 
-\- \*\*Python:\*\* Implements IAM business logic and workflows.
-
-\- \*\*SQLite:\*\* Provides persistent relational storage.
-
-\- \*\*CSV:\*\* Represents incoming employee data.
-
-\- \*\*JSON:\*\* Stores role, permission, and job-role configuration.
-
-\- \*\*Pytest:\*\* Validates application functionality and expected behavior.
+## 6. Access Certification Workflow
 
 
 
-\## 8. Scope and Limitations
+1. An access review is generated for a defined review period.
+
+2. Active employee-role assignments are included.
+
+3. Reviews remain pending until a decision is recorded.
+
+4. An authorized workflow operator approves or revokes access.
+
+5. Revoked assignments are marked accordingly.
+
+6. Decisions are recorded in the audit log.
+
+
+
+## 7. Technology Choices
+
+
+
+- **Python:** Implements IAM business logic and workflows.
+
+- **SQLite:** Provides persistent relational storage.
+
+- **CSV:** Represents incoming employee data.
+
+- **JSON:** Stores role, permission, and job-role configuration.
+
+- **Pytest:** Validates application functionality and expected behavior.
+
+
+
+## 8. Scope and Limitations
 
 
 
