@@ -97,3 +97,9 @@ Current test status: **16 tests passed**.
 This is a hands-on IAM governance implementation intended to demonstrate practical understanding of identity lifecycle processes, access governance, RBAC, and auditability.
 
 It is a portfolio project and does not currently integrate with production identity providers.
+
+## Documentation
+
+- [System Architecture](docs/architecture.md)
+- [Database Schema](docs/database-schema.md)
+- [IAM Governance Workflows](docs/iam-workflows.md)
