@@ -83,19 +83,12 @@ The system uses a modular architecture to separate identity lifecycle operations
 
 
 | Component | Responsibility |
-
 |---|---|
-
 | `database.py` | Database connection and schema initialization |
-
 | `seed\_data.py` | Loads roles, permissions, and role-permission mappings |
-
 | `identity\_lifecycle.py` | Employee provisioning, transfers, and deprovisioning |
-
 | `access\_certification.py` | Periodic access reviews and approval/revocation workflows |
-
 | `audit\_reporting.py` | Retrieves and reports IAM audit events |
-
 | `cli.py` | Interactive interface for IAM operations |
 
 

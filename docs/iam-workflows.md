@@ -167,11 +167,8 @@ The workflow supports:
 
 
 | Decision | Result |
-
 |---|---|
-
 | Approved | Access remains assigned |
-
 | Revoked | Corresponding role assignment is revoked |
 
 
@@ -229,19 +226,12 @@ The audit reporting module retrieves recent events and associates them with empl
 
 
 | Governance Area | Implemented Control |
-
 |---|---|
-
 | Identity lifecycle | Provisioning, movement, deprovisioning |
-
 | Access management | Job-role-based assignment |
-
 | Access certification | Periodic access reviews |
-
 | Access remediation | Role revocation |
-
 | Accountability | Actor recorded in audit events |
-
 | Traceability | Centralized audit logging |
 
 
