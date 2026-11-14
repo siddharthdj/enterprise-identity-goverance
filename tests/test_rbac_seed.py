@@ -1,14 +1,10 @@
-
 from src.database import get_connection
-from src.seed_data import seed_roles_and_permissions
 
 
-def test_rbac_configuration_loaded():
-    seed_roles_and_permissions()
+def test_rbac_configuration_loaded(test_db):
 
-    connection = get_connection()
+    with get_connection() as connection:
 
-    try:
         roles = connection.execute(
             "SELECT COUNT(*) FROM roles"
         ).fetchone()[0]
@@ -21,9 +17,6 @@ def test_rbac_configuration_loaded():
             "SELECT COUNT(*) FROM role_permissions"
         ).fetchone()[0]
 
-        assert roles == 5
-        assert permissions == 10
-        assert mappings == 10
-
-    finally:
-        connection.close()
+    assert roles == 5
+    assert permissions == 10
+    assert mappings == 10

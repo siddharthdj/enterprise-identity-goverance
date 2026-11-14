@@ -170,6 +170,188 @@ def provision_employee(employee):
     finally:
         connection.close()
 
+def move_employee(employee_id, new_department, new_job_title, actor="HR_ADMIN"):
+    """
+    Transfer an employee to a new department or job role.
+    Revoke old access and assign the new role.
+    """
+
+    mapping = load_config(DATA_DIR / "job_role_mapping.json")
+    roles_config = load_config(DATA_DIR / "roles.json")
+
+    if new_job_title not in mapping:
+        raise ValueError(f"No role mapping found for {new_job_title}")
+
+    role_name = mapping[new_job_title]
+
+    if role_name not in roles_config:
+        raise ValueError(f"Role configuration not found: {role_name}")
+
+    if roles_config[role_name]["department"] != new_department:
+        raise ValueError("New role does not belong to the specified department")
+
+    with get_connection() as conn:
+
+        employee = conn.execute(
+            "SELECT * FROM employees WHERE employee_id = ?",
+            (employee_id,)
+        ).fetchone()
+
+        if not employee:
+            raise ValueError(f"Employee not found: {employee_id}")
+
+        if employee["employment_status"] != "active":
+            raise ValueError("Cannot move an inactive employee")
+
+        if (
+        employee["department"] == new_department
+        and employee["job_title"] == new_job_title
+        ):
+            raise ValueError("Employee already has this department and job title")
+
+        identity = conn.execute(
+            "SELECT * FROM identities WHERE employee_id = ?",
+            (employee_id,)
+        ).fetchone()
+
+        if not identity or identity["account_status"] != "enabled":
+            raise ValueError("Employee identity is not enabled")
+
+        new_role = conn.execute(
+            "SELECT role_id FROM roles WHERE role_name = ?",
+            (role_name,)
+        ).fetchone()
+
+        if not new_role:
+            raise ValueError(f"Role not found in database: {role_name}")
+
+        # Revoke existing active role assignments
+        conn.execute(
+            """
+            UPDATE user_roles
+            SET assignment_status = 'revoked'
+            WHERE identity_id = ?
+            AND assignment_status = 'active'
+            """,
+            (identity["identity_id"],)
+        )
+
+        # Assign the new role
+        conn.execute(
+            """
+            INSERT INTO user_roles
+            (identity_id, role_id, assignment_status, assigned_by)
+            VALUES (?, ?, 'active', ?)
+            """,
+            (identity["identity_id"], new_role["role_id"], actor)
+        )
+
+        # Update employee information
+        conn.execute(
+            """
+            UPDATE employees
+            SET department = ?, job_title = ?
+            WHERE employee_id = ?
+            """,
+            (new_department, new_job_title, employee_id)
+        )
+
+        # Record audit event
+        conn.execute(
+            """
+            INSERT INTO audit_logs
+            (actor, target_identity_id, event_type, event_details, outcome)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                actor,
+                identity["identity_id"],
+                "EMPLOYEE_MOVED",
+                f"Employee moved to {new_department} as {new_job_title}",
+                "success"
+            )
+        )
+
+    print(f"SUCCESS: {employee_id} moved to {new_department} - {new_job_title}")
+
+
+def deprovision_employee(employee_id, actor="IAM_AUTOMATION"):
+    """Disable an employee identity and revoke all active access."""
+
+    with get_connection() as conn:
+
+        employee = conn.execute(
+            "SELECT * FROM employees WHERE employee_id = ?",
+            (employee_id,)
+        ).fetchone()
+
+        if not employee:
+            raise ValueError(f"Employee not found: {employee_id}")
+
+        if employee["employment_status"] != "active":
+            raise ValueError("Employee is already inactive or terminated")
+
+        identity = conn.execute(
+            "SELECT * FROM identities WHERE employee_id = ?",
+            (employee_id,)
+        ).fetchone()
+
+        if not identity:
+            raise ValueError("Employee identity not found")
+
+        # Disable digital identity
+        conn.execute(
+            """
+            UPDATE identities
+            SET account_status = 'disabled'
+            WHERE employee_id = ?
+            """,
+            (employee_id,)
+        )
+
+        # Revoke all active role assignments
+        conn.execute(
+            """
+            UPDATE user_roles
+            SET assignment_status = 'revoked'
+            WHERE identity_id = ?
+            AND assignment_status = 'active'
+            """,
+            (identity["identity_id"],)
+        )
+
+        # Mark employee as terminated
+        conn.execute(
+            """
+            UPDATE employees
+            SET employment_status = 'terminated'
+            WHERE employee_id = ?
+            """,
+            (employee_id,)
+        )
+
+        # Record audit event
+        conn.execute(
+            """
+            INSERT INTO audit_logs (
+                actor,
+                target_identity_id,
+                event_type,
+                event_details,
+                outcome
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                actor,
+                identity["identity_id"],
+                "IDENTITY_DEPROVISIONED",
+                f"Employee {employee_id} terminated and access revoked",
+                "success"
+            )
+        )
+
+    print(f"SUCCESS: {employee_id} deprovisioned. All access revoked.")
 
 def provision_from_csv():
     """Process employee records from the HR CSV feed."""

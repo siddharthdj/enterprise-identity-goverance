@@ -9,25 +9,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASE_PATH = BASE_DIR / "data" / "iam.db"
 
 
-def get_connection():
+def get_connection(db_path=None):
     """Create a database connection."""
-    connection = sqlite3.connect(DATABASE_PATH)
 
-    # Return database rows as dictionary-like objects
+    if db_path is None:
+        db_path = DATABASE_PATH
+
+    connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
-
-    # Enforce foreign key relationships
     connection.execute("PRAGMA foreign_keys = ON")
 
     return connection
 
 
-def initialize_database():
+def initialize_database(db_path=None):
     """Create the IAM database tables."""
 
-    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if db_path is None:
+        db_path = DATABASE_PATH
 
-    connection = get_connection()
+    db_path = Path(db_path)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    connection = get_connection(db_path)
 
     try:
         cursor = connection.cursor()
@@ -112,6 +116,25 @@ def initialize_database():
                 FOREIGN KEY (target_identity_id)
                     REFERENCES identities(identity_id)
             );
+
+            CREATE TABLE IF NOT EXISTS access_reviews (
+            review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            identity_id INTEGER NOT NULL,
+            role_id INTEGER NOT NULL,
+            review_period TEXT NOT NULL,
+            reviewer TEXT,
+            decision TEXT CHECK (
+                decision IN ('approved', 'revoked', 'pending')
+            ) DEFAULT 'pending',
+            review_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (identity_id) REFERENCES identities(identity_id),
+            FOREIGN KEY (role_id) REFERENCES roles(role_id),
+
+            UNIQUE (identity_id, role_id, review_period)
+        );
+
+
         """)
 
         connection.commit()
