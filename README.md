@@ -103,3 +103,4 @@ It is a portfolio project and does not currently integrate with production ident
 - [System Architecture](docs/architecture.md)
 - [Database Schema](docs/database-schema.md)
 - [IAM Governance Workflows](docs/iam-workflows.md)
+- [Project Demonstration](docs/demo.md)
